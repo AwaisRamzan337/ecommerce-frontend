@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail - Brand eCommerce</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* MOBILE: Send inquiry + heart in one row */
+        .mobile-inquiry-row {
+            display: none;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .btn-send-inquiry-mobile {
+            flex: 1;
+            padding: 12px;
+            background: #0D6EFD;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-heart-mobile {
+            width: 46px;
+            height: 46px;
+            border: 1px solid #E0E0E0;
+            background: #fff;
+            border-radius: 6px;
+            font-size: 18px;
+            color: #8B8B8B;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+        .btn-heart-mobile.active { color: #E53935; }
+
+        /* MOBILE: Read more button */
+        .read-more-btn {
+            display: none;
+            color: #0D6EFD;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            padding: 6px 0;
+            margin-top: 4px;
+        }
+        .desc-extra { display: block; }
+
+        @media (max-width: 768px) {
+            /* Show mobile inquiry row, hide desktop send inquiry */
+            .btn-send-inquiry { display: none !important; }
+            .mobile-inquiry-row { display: flex !important; }
+
+            /* Read more */
+            .read-more-btn { display: block !important; }
+            .desc-extra { display: none; }
+            .desc-extra.expanded { display: block; }
+            .specs-table { display: none; }
+            .specs-table.expanded { display: table; }
+            .features-list { display: none; }
+            .features-list.expanded { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ========== MOBILE DRAWER ========== -->
+<div class="mobile-overlay" id="mobileOverlay" onclick="closeDrawer()"></div>
+<div class="mobile-drawer" id="mobileDrawer">
+    <div class="drawer-user">
+        <img src="https://placehold.co/48x48/E0E0E0/8B8B8B?text=U" alt="User">
+        <a href="#">Sign in</a> | <a href="#">Register</a>
+    </div>
+    <nav class="drawer-nav">
+        <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="products.html"><i class="fa-solid fa-list"></i> Categories</a>
+        <a href="#"><i class="fa-regular fa-heart"></i> Favorites</a>
+        <a href="#"><i class="fa-regular fa-rectangle-list"></i> My orders</a>
+    </nav>
+    <div class="drawer-divider"></div>
+    <nav class="drawer-nav">
+        <a href="#"><i class="fa-solid fa-globe"></i> English | USD</a>
+        <a href="#"><i class="fa-solid fa-headset"></i> Contact us</a>
+        <a href="#"><i class="fa-solid fa-building"></i> About</a>
+    </nav>
+    <div class="drawer-divider"></div>
+    <nav class="drawer-nav drawer-nav-sm">
+        <a href="#">User agreement</a>
+        <a href="#">Partnership</a>
+        <a href="#">Privacy policy</a>
+    </nav>
+</div>
+
+<!-- ========== MOBILE HEADER ========== -->
+<header class="mobile-header">
+    <button class="hamburger-btn" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></button>
+    <a href="index.html" class="logo">
+        <img src="https://placehold.co/28x28/0D6EFD/fff?text=B" alt="Brand Logo">
+        <span>Brand</span>
+    </a>
+    <div class="mobile-header-icons">
+        <a href="cart.html" class="mobile-icon-btn">
+            <div class="cart-wrap"><i class="fa-solid fa-cart-shopping"></i><span class="cart-count" id="mobileCartCount">0</span></div>
+        </a>
+        <button class="mobile-icon-btn"><i class="fa-regular fa-user"></i></button>
+    </div>
+</header>
+
+<!-- ========== MOBILE SEARCH ========== -->
+<div class="mobile-search-bar">
+    <div class="mobile-search-inner">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search">
+    </div>
+</div>
+
+<!-- ========== HEADER ========== -->
+<header class="header">
+    <div class="header-top">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="images/logo-colored.svg" alt="Brand Logo">
+                <span>Brand</span>
+            </a>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search" autocomplete="off">
+                <div class="search-divider"></div>
+                <div class="search-category-wrap">
+                    <select id="searchCategory">
+                        <option value="">All category</option>
+                        <option value="tech">Smartphones</option>
+                        <option value="tech">Cameras</option>
+                        <option value="tech">Laptops</option>
+                        <option value="tech">Smart Watches</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <button class="search-btn" onclick="handleSearch()">Search</button>
+            </div>
+            <div class="header-icons">
+                <div class="dropdown">
+                    <button class="dropdown-trigger icon-trigger" onclick="toggleDropdown('profileMenu')">
+                        <div class="icon-item">
+                            <i class="fa-regular fa-user"></i>
+                            <span>Profile</span>
+                        </div>
+                    </button>
+                    <div class="dropdown-menu dropdown-right" id="profileMenu">
+                        <div class="profile-header">
+                            <img src="images/avatar=pic1.jpg" alt="User"
+                                 onerror="this.src='https://placehold.co/40x40/0D6EFD/fff?text=U'">
+                            <div>
+                                <p style="font-weight:600;">Hi, User</p>
+                                <small style="color:#8B8B8B;">Let's get started</small>
+                            </div>
+                        </div>
+                        <a href="#"><i class="fa-regular fa-user"></i> My Profile</a>
+                        <a href="#"><i class="fa-solid fa-gear"></i> Settings</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="join-link"><i class="fa-solid fa-right-to-bracket"></i> Join now</a>
+                        <a href="#" class="login-link"><i class="fa-solid fa-lock"></i> Log in</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="dropdown-trigger icon-trigger" onclick="toggleDropdown('messageMenu')">
+                        <div class="icon-item">
+                            <i class="fa-regular fa-comment-dots"></i>
+                            <span>Message</span>
+                        </div>
+                    </button>
+                    <div class="dropdown-menu dropdown-right" id="messageMenu">
+                        <div class="dropdown-title">Messages</div>
+                        <div class="empty-state">
+                            <i class="fa-regular fa-comment-dots"></i>
+                            <p>No messages yet</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="dropdown-trigger icon-trigger" onclick="toggleDropdown('ordersMenu')">
+                        <div class="icon-item">
+                            <i class="fa-regular fa-rectangle-list"></i>
+                            <span>Orders</span>
+                        </div>
+                    </button>
+                    <div class="dropdown-menu dropdown-right" id="ordersMenu">
+                        <div class="dropdown-title">My Orders</div>
+                        <a href="#"><i class="fa-solid fa-clock-rotate-left"></i> Order History</a>
+                        <a href="#"><i class="fa-solid fa-truck"></i> Track Order</a>
+                        <a href="#"><i class="fa-solid fa-rotate-left"></i> Returns</a>
+                    </div>
+                </div>
+                <a href="cart.html" class="icon-item cart-icon">
+                    <div class="cart-wrap">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </div>
+                    <span>My cart</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-left">
+                <div class="dropdown">
+                    <button class="dropdown-trigger all-cat-btn" onclick="toggleDropdown('allCatMenu')">
+                        <i class="fa-solid fa-bars"></i>
+                        <span>All category</span>
+                    </button>
+                                        <div class="dropdown-menu" id="allCatMenu">
+                        <a href="products.html"><i class="fa-solid fa-laptop"></i> All Products</a>
+                        <a href="products.html?cat=tech"><i class="fa-solid fa-mobile-screen"></i> Smartphones</a>
+                        <a href="products.html?cat=tech"><i class="fa-solid fa-camera"></i> Cameras</a>
+                        <a href="products.html?cat=tech"><i class="fa-solid fa-laptop"></i> Laptops</a>
+                        <a href="products.html?cat=tech"><i class="fa-solid fa-clock"></i> Smart Watches</a>
+                    </div>
+                </div>
+                <a href="products.html?sort=featured">Hot offers</a>
+                <a href="products.html">All Products</a>
+                <a href="products.html?sort=rating">Top Rated</a>
+                <a href="products.html?sort=orders">Best Sellers</a>
+                <div class="dropdown">
+                    <button class="dropdown-trigger help-btn" onclick="toggleDropdown('helpMenu')">
+                        <span>Help</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu" id="helpMenu">
+                        <a href="#"><i class="fa-solid fa-circle-question"></i> Help Center</a>
+                        <a href="#"><i class="fa-solid fa-truck"></i> Shipping Info</a>
+                        <a href="#"><i class="fa-solid fa-rotate-left"></i> Returns</a>
+                        <a href="#"><i class="fa-solid fa-headset"></i> Contact Support</a>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-right">
+                <div class="dropdown">
+                    <button class="dropdown-trigger lang-btn" onclick="toggleDropdown('langMenu')">
+                        <span>English, USD</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-right" id="langMenu">
+                        <a href="#" onclick="setLanguage('English, USD')"><i class="fa-solid fa-check text-blue"></i> English, USD</a>
+                        <a href="#" onclick="setLanguage('Arabic, AED')">Arabic, AED</a>
+                        <a href="#" onclick="setLanguage('French, EUR')">French, EUR</a>
+                        <a href="#" onclick="setLanguage('German, EUR')">German, EUR</a>
+                        <a href="#" onclick="setLanguage('Chinese, CNY')">Chinese, CNY</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="dropdown-trigger ship-btn" onclick="toggleDropdown('shipMenu')">
+                        <span>Ship to</span>
+                        <img src="https://flagcdn.com/w20/de.png" alt="DE" id="selectedFlag">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-right" id="shipMenu">
+                        <a href="#" onclick="setShipTo('de', 'Germany')"><img src="https://flagcdn.com/w20/de.png"> Germany</a>
+                        <a href="#" onclick="setShipTo('us', 'United States')"><img src="https://flagcdn.com/w20/us.png"> United States</a>
+                        <a href="#" onclick="setShipTo('ae', 'UAE')"><img src="https://flagcdn.com/w20/ae.png"> UAE</a>
+                        <a href="#" onclick="setShipTo('gb', 'Great Britain')"><img src="https://flagcdn.com/w20/gb.png"> Great Britain</a>
+                        <a href="#" onclick="setShipTo('fr', 'France')"><img src="https://flagcdn.com/w20/fr.png"> France</a>
+                        <a href="#" onclick="setShipTo('cn', 'China')"><img src="https://flagcdn.com/w20/cn.png"> China</a>
+                        <a href="#" onclick="setShipTo('pk', 'Pakistan')"><img src="https://flagcdn.com/w20/pk.png"> Pakistan</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- ========== BREADCRUMB ========== -->
+<div class="breadcrumb-bar">
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="index.html">Home</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="products.html">Clothings</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="products.html">Men's wear</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>Summer clothing</span>
+        </nav>
+    </div>
+</div>
+
+<!-- ========== PRODUCT DETAIL ========== -->
+<div class="product-detail-page">
+    <div class="container">
+        <div class="detail-layout">
+
+            <!-- LEFT: IMAGES -->
+            <div class="detail-images">
+                <!-- Main Image -->
+                <div class="main-image-wrap" style="position:relative;">
+                    <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=400&fit=crop"
+                         alt="Product" id="mainImage">
+                    <button class="img-nav-btn img-nav-prev" onclick="mobileImgNav(-1)" style="display:none;"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="img-nav-btn img-nav-next" onclick="mobileImgNav(1)" style="display:none;"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+                <!-- Thumbnails -->
+                <div class="thumbnails">
+                    <div class="thumb active" onclick="changeImage(this, 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=400&fit=crop')">
+                        <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=80&h=80&fit=crop" alt="Thumb 1">
+                    </div>
+                    <div class="thumb" onclick="changeImage(this, 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=400&h=400&fit=crop')">
+                        <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=80&h=80&fit=crop" alt="Thumb 2">
+                    </div>
+                    <div class="thumb" onclick="changeImage(this, 'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=400&h=400&fit=crop')">
+                        <img src="https://images.unsplash.com/photo-1562157873-818bc0726f68?w=80&h=80&fit=crop" alt="Thumb 3">
+                    </div>
+                    <div class="thumb" onclick="changeImage(this, 'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=400&h=400&fit=crop')">
+                        <img src="https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=80&h=80&fit=crop" alt="Thumb 4">
+                    </div>
+                    <div class="thumb" onclick="changeImage(this, 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop')">
+                        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=80&h=80&fit=crop" alt="Thumb 5">
+                    </div>
+                    <div class="thumb" onclick="changeImage(this, 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=400&h=400&fit=crop')">
+                        <img src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=80&h=80&fit=crop" alt="Thumb 6">
+                    </div>
+                </div>
+            </div>
+
+            <!-- MIDDLE: PRODUCT INFO -->
+            <div class="detail-info">
+                <!-- Stock -->
+                <div class="in-stock">
+                    <i class="fa-solid fa-check"></i> In stock
+                </div>
+
+                <!-- Title -->
+                <h1 class="product-title">Mens Long Sleeve T-shirt Cotton Base Layer Slim Muscle</h1>
+
+                <!-- Rating -->
+                <div class="detail-rating">
+                    <span class="stars-orange">★★★★★</span>
+                    <span class="rating-score">9.3</span>
+                    <span class="dot">•</span>
+                    <i class="fa-regular fa-comment"></i>
+                    <span>32 reviews</span>
+                    <span class="dot">•</span>
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span>154 sold</span>
+                </div>
+
+                <!-- Price Tiers -->
+                <div class="price-tiers">
+                    <div class="tier active-tier" onclick="selectTier(this)">
+                        <span class="tier-price">$98.00</span>
+                        <span class="tier-range">50-100 pcs</span>
+                    </div>
+                    <div class="tier" onclick="selectTier(this)">
+                        <span class="tier-price">$90.00</span>
+                        <span class="tier-range">100-700 pcs</span>
+                    </div>
+                    <div class="tier" onclick="selectTier(this)">
+                        <span class="tier-price">$78.00</span>
+                        <span class="tier-range">700+ pcs</span>
+                    </div>
+                </div>
+
+                <!-- Product Details Table -->
+                <div class="detail-table">
+                    <div class="detail-row">
+                        <span class="detail-label">Price:</span>
+                        <span class="detail-value">Negotiable</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Type:</span>
+                        <span class="detail-value">Classic shoes</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Material:</span>
+                        <span class="detail-value">Plastic material</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Design:</span>
+                        <span class="detail-value">Modern nice</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Customization:</span>
+                        <span class="detail-value">Customized logo and design custom packages</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Protection:</span>
+                        <span class="detail-value">Refund Policy</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Warranty:</span>
+                        <span class="detail-value">2 years full warranty</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: SUPPLIER BOX -->
+            <div class="detail-supplier">
+
+                <!-- Supplier Info -->
+                <div class="supplier-card">
+                    <div class="supplier-avatar">R</div>
+                    <div class="supplier-info">
+                        <small>Supplier</small>
+                        <p>Guanjoi Trading LLC</p>
+                    </div>
+                </div>
+
+                <div class="supplier-badges">
+                    <span><img src="https://flagcdn.com/w20/de.png" alt="DE"> Germany, Berlin</span>
+                    <span><i class="fa-solid fa-shield-halved"></i> Verified Seller</span>
+                    <span><i class="fa-solid fa-globe"></i> Worldwide shipping</span>
+                </div>
+
+                <button class="btn-send-inquiry" onclick="sendInquiry()">
+                    Send inquiry
+                </button>
+                <!-- Mobile: Send inquiry + heart in one row (PDF page 14) -->
+                <div class="mobile-inquiry-row">
+                    <button class="btn-send-inquiry-mobile" onclick="sendInquiry()">Send inquiry</button>
+                    <button class="btn-heart-mobile" onclick="toggleSaveLater(this)"><i class="fa-regular fa-heart"></i></button>
+                </div>
+                <button class="btn-add-to-cart" onclick="addToCartFromDetail()" style="width:100%;padding:10px;margin-top:8px;background:#fff;border:1px solid #0D6EFD;color:#0D6EFD;border-radius:6px;font-size:14px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;">
+                    <i class="fa-solid fa-cart-shopping"></i> Add to cart
+                </button>
+
+                <a href="#" class="btn-seller-profile" onclick="openSellerProfile(); return false;">Seller's profile</a>
+
+                <div class="save-later">
+                    <i class="fa-regular fa-heart"></i>
+                    <span>Save for later</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ========== TABS SECTION ========== -->
+        <div class="detail-tabs-section">
+            <div class="detail-tabs">
+                <button class="tab-btn active" onclick="switchTab('description')">Description</button>
+                <button class="tab-btn" onclick="switchTab('reviews')">Reviews</button>
+                <button class="tab-btn" onclick="switchTab('shipping')">Shipping</button>
+                <button class="tab-btn" onclick="switchTab('seller')">About seller</button>
+            </div>
+
+            <!-- DESCRIPTION TAB -->
+            <div class="tab-content active" id="tab-description">
+                <div class="desc-layout">
+                    <div class="desc-text">
+                        <div class="desc-body" id="descBody">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                            <p style="margin-top:12px;" class="desc-extra">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit.</p>
+
+                            <!-- Specs Table -->
+                            <table class="specs-table">
+                                <tr><td>Model</td><td>#8786867</td></tr>
+                                <tr><td>Style</td><td>Classic style</td></tr>
+                                <tr><td>Certificate</td><td>ISO-898921212</td></tr>
+                                <tr><td>Size</td><td>34mm x 450mm x 19mm</td></tr>
+                                <tr><td>Memory</td><td>36GB RAM</td></tr>
+                            </table>
+
+                            <!-- Features List -->
+                            <ul class="features-list">
+                                <li><i class="fa-solid fa-check"></i> Some great feature name here</li>
+                                <li><i class="fa-solid fa-check"></i> Lorem ipsum dolor sit amet, consectetur</li>
+                                <li><i class="fa-solid fa-check"></i> Duis aute irure dolor in reprehenderit</li>
+                            </ul>
+                        </div>
+                        <!-- Mobile Read More (PDF page 15) -->
+                        <button class="read-more-btn" id="readMoreBtn" onclick="toggleReadMore()">Read more</button>
+                    </div>
+
+                    <!-- YOU MAY LIKE -->
+                    <div class="you-may-like">
+                        <h4>You may like</h4>
+                        <div class="may-like-list" id="youMayLikeList">
+                            <!-- Dynamically injected by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REVIEWS TAB -->
+            <div class="tab-content" id="tab-reviews">
+                <div class="reviews-section">
+                    <div class="review-card">
+                        <div class="reviewer">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop" alt="User">
+                            <div>
+                                <p class="reviewer-name">John Smith</p>
+                                <span class="stars-orange">★★★★★</span>
+                            </div>
+                            <span class="review-date">Dec 14, 2023</span>
+                        </div>
+                        <p class="review-text">Great product! Very comfortable and fits perfectly. The material is high quality and the color matches the pictures.</p>
+                    </div>
+                    <div class="review-card">
+                        <div class="reviewer">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=40&h=40&fit=crop" alt="User">
+                            <div>
+                                <p class="reviewer-name">Sarah Johnson</p>
+                                <span class="stars-orange">★★★★</span>
+                            </div>
+                            <span class="review-date">Nov 28, 2023</span>
+                        </div>
+                        <p class="review-text">Good quality shirt. Delivery was fast. Would recommend to others.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SHIPPING TAB -->
+            <div class="tab-content" id="tab-shipping">
+                <div class="shipping-info">
+                    <h4>Shipping Information</h4>
+                    <div class="detail-table">
+                        <div class="detail-row">
+                            <span class="detail-label">Delivery:</span>
+                            <span class="detail-value">Worldwide shipping available</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Estimated time:</span>
+                            <span class="detail-value">7-14 business days</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Free shipping:</span>
+                            <span class="detail-value">On orders over $100</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Returns:</span>
+                            <span class="detail-value">30 days return policy</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABOUT SELLER TAB -->
+            <div class="tab-content" id="tab-seller">
+                <div class="seller-info">
+                    <div class="seller-header">
+                        <div class="supplier-avatar large">R</div>
+                        <div>
+                            <h3>Guanjoi Trading LLC</h3>
+                            <div class="supplier-badges">
+                                <span><img src="https://flagcdn.com/w20/de.png" alt="DE"> Germany, Berlin</span>
+                                <span><i class="fa-solid fa-shield-halved"></i> Verified Seller</span>
+                                <span><i class="fa-solid fa-globe"></i> Worldwide shipping</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail-table" style="margin-top:16px;">
+                        <div class="detail-row">
+                            <span class="detail-label">Member since:</span>
+                            <span class="detail-value">January 2020</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Total sales:</span>
+                            <span class="detail-value">1,240 orders</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Response rate:</span>
+                            <span class="detail-value">98%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== RELATED PRODUCTS ========== -->
+        <div class="related-section">
+            <h2>Related products</h2>
+            <div class="related-grid" id="relatedProductsGrid">
+                <!-- Dynamically injected by JS -->
+            </div>
+        </div>
+
+        <!-- ========== SUPER DISCOUNT BANNER ========== -->
+        <div class="discount-banner">
+            <div class="discount-left">
+                <h3>Super discount on more than 100 USD</h3>
+                <p>Have you ever finally just write dummy info</p>
+            </div>
+            <a href="products.html" class="btn-shop-now">Shop now</a>
+        </div>
+
+    </div>
+</div>
+
+<!-- ========== NEWSLETTER ========== -->
+<section class="newsletter-section">
+    <div class="container">
+        <h3>Subscribe on our newsletter</h3>
+        <p>Get daily news on upcoming offers from many suppliers all over the world</p>
+        <div class="newsletter-form">
+            <i class="fa-regular fa-envelope"></i>
+            <input type="email" placeholder="Email">
+            <button>Subscribe</button>
+        </div>
+    </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-wrapper">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="https://placehold.co/32x32/0D6EFD/fff?text=B" alt="Brand">
+                    <span>Brand</span>
+                </a>
+                <p>Best information about the company goes here but now lorem ipsum is</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>About</h4>
+                <a href="#">About Us</a><a href="#">Find store</a>
+                <a href="#">Categories</a><a href="#">Blogs</a>
+            </div>
+            <div class="footer-col">
+                <h4>Partnership</h4>
+                <a href="#">About Us</a><a href="#">Find store</a>
+                <a href="#">Categories</a><a href="#">Blogs</a>
+            </div>
+            <div class="footer-col">
+                <h4>Information</h4>
+                <a href="#">Help Center</a><a href="#">Money Refund</a>
+                <a href="#">Shipping</a><a href="#">Contact us</a>
+            </div>
+            <div class="footer-col">
+                <h4>For users</h4>
+                <a href="#">Login</a><a href="#">Register</a>
+                <a href="#">Settings</a><a href="#">My Orders</a>
+            </div>
+            <div class="footer-col">
+                <h4>Get app</h4>
+                <a href="#" class="app-btn">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store">
+                </a>
+                <a href="#" class="app-btn" style="margin-top:8px;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play">
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Ecommerce.</p>
+            <div class="footer-lang">
+                <img src="https://flagcdn.com/w20/us.png" alt="English">
+                <span>English</span>
+                <i class="fa-solid fa-chevron-up"></i>
+            </div>
+        </div>
+    </div>
+</footer>
+<script src="script.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const productId = parseInt(localStorage.getItem('selectedProduct')) || 1;
+    const products = JSON.parse(localStorage.getItem('productsData')) || [];
+    const product = products.find(p => p.id === productId);
+
+    if (!product) return;
+
+    const mainImg = document.getElementById('mainImage');
+    if (mainImg) mainImg.src = product.images[0];
+
+    const thumbsContainer = document.querySelector('.thumbnails');
+    if (thumbsContainer && product.images) {
+        thumbsContainer.innerHTML = product.images.map((img, i) => `
+            <div class="thumb ${i === 0 ? 'active' : ''}"
+                 onclick="changeImage(this, '${img}')">
+                <img src="${img}" alt="Thumb ${i+1}">
+            </div>
+        `).join('');
+    }
+
+    const title = document.querySelector('.product-title');
+    if (title) title.textContent = product.name;
+
+    const score = document.querySelector('.rating-score');
+    if (score) score.textContent = product.rating;
+
+    const tiersEl = document.querySelector('.price-tiers');
+    if (tiersEl && product.priceTiers) {
+        tiersEl.innerHTML = product.priceTiers.map((tier, i) => `
+            <div class="tier ${i === 0 ? 'active-tier' : ''}" onclick="selectTier(this)">
+                <span class="tier-price">$${tier.price}</span>
+                <span class="tier-range">${tier.range}</span>
+            </div>
+        `).join('');
+    }
+
+    const detailTable = document.querySelector('.detail-table');
+    if (detailTable) {
+        detailTable.innerHTML = `
+            <div class="detail-row">
+                <span class="detail-label">Price:</span>
+                <span class="detail-value">$${product.price}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Type:</span>
+                <span class="detail-value">${product.type}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Material:</span>
+                <span class="detail-value">${product.material}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Condition:</span>
+                <span class="detail-value">${product.condition}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Shipping:</span>
+                <span class="detail-value">${product.shipping}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Warranty:</span>
+                <span class="detail-value">2 years full warranty</span>
+            </div>
+        `;
+    }
+
+    const descText = document.querySelector('.desc-text p');
+    if (descText) descText.textContent = product.description;
+
+    const specsTable = document.querySelector('.specs-table');
+    if (specsTable && product.specs) {
+        specsTable.innerHTML = Object.entries(product.specs).map(([key, val]) => `
+            <tr><td>${key}</td><td>${val}</td></tr>
+        `).join('');
+    }
+
+    const supplierInfo = document.querySelector('.supplier-info p');
+    if (supplierInfo) supplierInfo.textContent = product.supplier;
+
+    const supplierBadges = document.querySelector('.supplier-badges');
+    if (supplierBadges) {
+        supplierBadges.innerHTML = `
+            <span><img src="https://flagcdn.com/w20/${product.supplierCountry}.png" alt="flag">
+                ${product.supplierCity}</span>
+            <span><i class="fa-solid fa-shield-halved"></i> Verified Seller</span>
+            <span><i class="fa-solid fa-globe"></i> Worldwide shipping</span>
+        `;
+    }
+
+    const inStock = document.querySelector('.in-stock');
+    if (inStock) inStock.innerHTML = '<i class="fa-solid fa-check"></i> In stock';
+
+    // Store current product for addToCartFromDetail
+    window._currentProduct = product;
+    // Set default selected tier price to first tier
+    window._selectedTierPrice = product.priceTiers ? product.priceTiers[0].price : product.price;
+
+    // ===== DYNAMIC: YOU MAY LIKE =====
+    const mayLikeList = document.getElementById('youMayLikeList');
+    if (mayLikeList) {
+        const others = products.filter(p => p.id !== productId).slice(0, 5);
+        mayLikeList.innerHTML = others.map(p => `
+            <div class="may-like-item" onclick="goToProduct(${p.id})">
+                <img src="${p.image}" alt="${p.name}"
+                     onerror="this.src='https://placehold.co/60x60/F7FAFC/ccc?text=Img'">
+                <div>
+                    <p>${p.name}</p>
+                    <span>$${p.priceTiers ? p.priceTiers[p.priceTiers.length-1].price.toFixed(2) : p.price.toFixed(2)} - $${p.price.toFixed(2)}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // ===== DYNAMIC: RELATED PRODUCTS =====
+    const relatedGrid = document.getElementById('relatedProductsGrid');
+    if (relatedGrid) {
+        const related = products.filter(p => p.id !== productId && p.category === product.category).slice(0, 6);
+        const fallback = products.filter(p => p.id !== productId).slice(0, 6);
+        const toShow = related.length >= 3 ? related : fallback;
+        relatedGrid.innerHTML = toShow.map(p => `
+            <div class="related-card" onclick="goToProduct(${p.id})">
+                <img src="${p.image}" alt="${p.name}"
+                     onerror="this.src='https://placehold.co/150x150/F7FAFC/ccc?text=Img'">
+                <p>${p.name}</p>
+                <span>$${p.priceTiers ? p.priceTiers[p.priceTiers.length-1].price.toFixed(2) : p.price.toFixed(2)} - $${p.price.toFixed(2)}</span>
+            </div>
+        `).join('');
+    }
+});
+
+// Toggle Read More (mobile)
+function toggleReadMore() {
+    const btn = document.getElementById('readMoreBtn');
+    const extras = document.querySelectorAll('.desc-extra, .specs-table, .features-list');
+    const expanded = btn.textContent === 'Read less';
+    extras.forEach(el => el.classList.toggle('expanded', !expanded));
+    btn.textContent = expanded ? 'Read more' : 'Read less';
+}
+
+// Toggle Save for Later heart
+function toggleSaveLater(btn) {
+    btn.classList.toggle('active');
+    const icon = btn.querySelector('i');
+    if (icon) {
+        icon.classList.toggle('fa-regular', !btn.classList.contains('active'));
+        icon.classList.toggle('fa-solid', btn.classList.contains('active'));
+    }
+}
+
+// Seller's profile — open About seller tab and scroll to it
+function openSellerProfile() {
+    // Hide all tab contents, remove active from all buttons
+    document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(tb => tb.classList.remove('active'));
+    // Show seller tab
+    const sellerTab = document.getElementById('tab-seller');
+    if (sellerTab) sellerTab.classList.add('active');
+    // Activate seller button
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.textContent.trim() === 'About seller') btn.classList.add('active');
+    });
+    // Scroll to tabs section
+    const tabsSection = document.querySelector('.detail-tabs-section');
+    if (tabsSection) tabsSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Send Inquiry — opens a simple modal/alert (NOT cart)
+function sendInquiry() {
+    const name = document.querySelector('.product-title')?.textContent || 'this product';
+    alert('Inquiry sent for: ' + name + '\n\nA supplier will contact you shortly.');
+}
+
+// Select price tier
+function selectTier(el) {
+    document.querySelectorAll('.tier').forEach(t => t.classList.remove('active-tier'));
+    el.classList.add('active-tier');
+    // Store selected price
+    const priceText = el.querySelector('.tier-price')?.textContent?.replace('$', '').trim();
+    if (priceText) window._selectedTierPrice = parseFloat(priceText);
+}
+
+// Add to Cart from detail page
+function addToCartFromDetail() {
+    const product = window._currentProduct;
+    if (!product) return;
+    // Use selected tier price if available, else default
+    const price = window._selectedTierPrice || product.price;
+    addToCart({
+        id: product.id,
+        name: product.name,
+        price: price,
+        image: product.images[0]
+    });
+}
+</script>
+
+</body>
+</html>

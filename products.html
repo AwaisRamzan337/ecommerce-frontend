@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Brand eCommerce</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* MOBILE CATEGORY CHIPS */
+        .mobile-cat-chips {
+            display: none;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 8px 12px;
+            gap: 8px;
+            background: #fff;
+            border-bottom: 1px solid #F0F0F0;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .mobile-cat-chips::-webkit-scrollbar { display: none; }
+        .cat-chip {
+            display: inline-block;
+            padding: 6px 14px;
+            border: 1px solid #0D6EFD;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #0D6EFD;
+            background: #fff;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .cat-chip.active, .cat-chip:hover {
+            background: #0D6EFD;
+            color: #fff;
+        }
+        @media (max-width: 768px) {
+            .mobile-cat-chips { display: flex; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ========== MOBILE DRAWER ========== -->
+<div class="mobile-overlay" id="mobileOverlay" onclick="closeDrawer()"></div>
+<div class="mobile-drawer" id="mobileDrawer">
+    <div class="drawer-user">
+        <img src="https://placehold.co/48x48/E0E0E0/8B8B8B?text=U" alt="User">
+        <a href="#">Sign in</a> | <a href="#">Register</a>
+    </div>
+    <nav class="drawer-nav">
+        <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="products.html"><i class="fa-solid fa-list"></i> Categories</a>
+        <a href="#"><i class="fa-regular fa-heart"></i> Favorites</a>
+        <a href="#"><i class="fa-regular fa-rectangle-list"></i> My orders</a>
+    </nav>
+    <div class="drawer-divider"></div>
+    <nav class="drawer-nav">
+        <a href="#"><i class="fa-solid fa-globe"></i> English | USD</a>
+        <a href="#"><i class="fa-solid fa-headset"></i> Contact us</a>
+        <a href="#"><i class="fa-solid fa-building"></i> About</a>
+    </nav>
+    <div class="drawer-divider"></div>
+    <nav class="drawer-nav drawer-nav-sm">
+        <a href="#">User agreement</a>
+        <a href="#">Partnership</a>
+        <a href="#">Privacy policy</a>
+    </nav>
+</div>
+
+<!-- ========== MOBILE HEADER ========== -->
+<header class="mobile-header">
+    <button class="hamburger-btn" onclick="openDrawer()"><i class="fa-solid fa-bars"></i></button>
+    <a href="index.html" class="logo">
+        <img src="https://placehold.co/28x28/0D6EFD/fff?text=B" alt="Brand Logo">
+        <span>Brand</span>
+    </a>
+    <div class="mobile-header-icons">
+        <a href="cart.html" class="mobile-icon-btn">
+            <div class="cart-wrap"><i class="fa-solid fa-cart-shopping"></i><span class="cart-count" id="mobileCartCount">0</span></div>
+        </a>
+        <button class="mobile-icon-btn"><i class="fa-regular fa-user"></i></button>
+    </div>
+</header>
+
+<!-- ========== MOBILE SEARCH ========== -->
+<div class="mobile-search-bar">
+    <div class="mobile-search-inner">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search">
+    </div>
+</div>
+
+<!-- ========== MOBILE CATEGORY CHIPS ========== -->
+<div class="mobile-cat-chips" id="mobileCatChips">
+    <button class="cat-chip active" onclick="setMobileCatChip(this, '')">All category</button>
+    <button class="cat-chip" onclick="setMobileCatChip(this, 'tablets')">Tablets</button>
+    <button class="cat-chip" onclick="setMobileCatChip(this, 'phones')">Phones</button>
+    <button class="cat-chip" onclick="setMobileCatChip(this, 'ipads')">Ipads</button>
+    <button class="cat-chip" onclick="setMobileCatChip(this, 'ipod')">Ipod</button>
+    <button class="cat-chip" onclick="setMobileCatChip(this, 'tech')">Gadgets</button>
+    <button class="cat-chip" onclick="setMobileCatChip(this, 'accessories')">Accessories</button>
+</div>
+
+<!-- ========== HEADER ========== -->
+<header class="header">
+    <div class="header-top">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="images/logo-colored.svg" alt="Brand Logo">
+                <span>Brand</span>
+            </a>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search" autocomplete="off">
+                <div class="search-divider"></div>
+                <div class="search-category-wrap">
+                    <select id="searchCategory">
+                        <option value="">All category</option>
+                        <option value="tech">Smartphones</option>
+                        <option value="tech">Cameras</option>
+                        <option value="tech">Laptops</option>
+                        <option value="tech">Smart Watches</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <button class="search-btn" onclick="handleSearch()">Search</button>
+            </div>
+            <div class="header-icons">
+                <div class="dropdown">
+                    <button class="dropdown-trigger icon-trigger" onclick="toggleDropdown('profileMenu')">
+                        <div class="icon-item">
+                            <i class="fa-regular fa-user"></i>
+                            <span>Profile</span>
+                        </div>
+                    </button>
+                    <div class="dropdown-menu dropdown-right" id="profileMenu">
+                        <div class="profile-header">
+                            <img src="images/avatar=pic1.jpg" alt="User"
+                                 onerror="this.src='https://placehold.co/40x40/0D6EFD/fff?text=U'">
+                            <div>
+                                <p style="font-weight:600;">Hi, User</p>
+                                <small style="color:#8B8B8B;">Let's get started</small>
+                            </div>
+                        </div>
+                        <a href="#"><i class="fa-regular fa-user"></i> My Profile</a>
+                        <a href="#"><i class="fa-solid fa-gear"></i> Settings</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="join-link"><i class="fa-solid fa-right-to-bracket"></i> Join now</a>
+                        <a href="#" class="login-link"><i class="fa-solid fa-lock"></i> Log in</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="dropdown-trigger icon-trigger" onclick="toggleDropdown('messageMenu')">
+                        <div class="icon-item">
+                            <i class="fa-regular fa-comment-dots"></i>
+                            <span>Message</span>
+                        </div>
+                    </button>
+                    <div class="dropdown-menu dropdown-right" id="messageMenu">
+                        <div class="dropdown-title">Messages</div>
+                        <div class="empty-state">
+                            <i class="fa-regular fa-comment-dots"></i>
+                            <p>No messages yet</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="dropdown-trigger icon-trigger" onclick="toggleDropdown('ordersMenu')">
+                        <div class="icon-item">
+                            <i class="fa-regular fa-rectangle-list"></i>
+                            <span>Orders</span>
+                        </div>
+                    </button>
+                    <div class="dropdown-menu dropdown-right" id="ordersMenu">
+                        <div class="dropdown-title">My Orders</div>
+                        <a href="#"><i class="fa-solid fa-clock-rotate-left"></i> Order History</a>
+                        <a href="#"><i class="fa-solid fa-truck"></i> Track Order</a>
+                        <a href="#"><i class="fa-solid fa-rotate-left"></i> Returns</a>
+                    </div>
+                </div>
+                <a href="cart.html" class="icon-item cart-icon">
+                    <div class="cart-wrap">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </div>
+                    <span>My cart</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-left">
+                <div class="dropdown">
+                    <button class="dropdown-trigger all-cat-btn" onclick="toggleDropdown('allCatMenu')">
+                        <i class="fa-solid fa-bars"></i>
+                        <span>All category</span>
+                    </button>
+                                        <div class="dropdown-menu" id="allCatMenu">
+                        <a href="products.html"><i class="fa-solid fa-laptop"></i> All Products</a>
+                        <a href="products.html?cat=tech"><i class="fa-solid fa-mobile-screen"></i> Smartphones</a>
+                        <a href="products.html?cat=tech"><i class="fa-solid fa-camera"></i> Cameras</a>
+                        <a href="products.html?cat=tech"><i class="fa-solid fa-laptop"></i> Laptops</a>
+                        <a href="products.html?cat=tech"><i class="fa-solid fa-clock"></i> Smart Watches</a>
+                    </div>
+                </div>
+                <a href="products.html?sort=featured">Hot offers</a>
+                <a href="products.html">All Products</a>
+                <a href="products.html?sort=rating">Top Rated</a>
+                <a href="products.html?sort=orders">Best Sellers</a>
+                <div class="dropdown">
+                    <button class="dropdown-trigger help-btn" onclick="toggleDropdown('helpMenu')">
+                        <span>Help</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu" id="helpMenu">
+                        <a href="#"><i class="fa-solid fa-circle-question"></i> Help Center</a>
+                        <a href="#"><i class="fa-solid fa-truck"></i> Shipping Info</a>
+                        <a href="#"><i class="fa-solid fa-rotate-left"></i> Returns</a>
+                        <a href="#"><i class="fa-solid fa-headset"></i> Contact Support</a>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-right">
+                <div class="dropdown">
+                    <button class="dropdown-trigger lang-btn" onclick="toggleDropdown('langMenu')">
+                        <span>English, USD</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-right" id="langMenu">
+                        <a href="#" onclick="setLanguage('English, USD')"><i class="fa-solid fa-check text-blue"></i> English, USD</a>
+                        <a href="#" onclick="setLanguage('Arabic, AED')">Arabic, AED</a>
+                        <a href="#" onclick="setLanguage('French, EUR')">French, EUR</a>
+                        <a href="#" onclick="setLanguage('German, EUR')">German, EUR</a>
+                        <a href="#" onclick="setLanguage('Chinese, CNY')">Chinese, CNY</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="dropdown-trigger ship-btn" onclick="toggleDropdown('shipMenu')">
+                        <span>Ship to</span>
+                        <img src="https://flagcdn.com/w20/de.png" alt="DE" id="selectedFlag">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-right" id="shipMenu">
+                        <a href="#" onclick="setShipTo('de', 'Germany')"><img src="https://flagcdn.com/w20/de.png"> Germany</a>
+                        <a href="#" onclick="setShipTo('us', 'United States')"><img src="https://flagcdn.com/w20/us.png"> United States</a>
+                        <a href="#" onclick="setShipTo('ae', 'UAE')"><img src="https://flagcdn.com/w20/ae.png"> UAE</a>
+                        <a href="#" onclick="setShipTo('gb', 'Great Britain')"><img src="https://flagcdn.com/w20/gb.png"> Great Britain</a>
+                        <a href="#" onclick="setShipTo('fr', 'France')"><img src="https://flagcdn.com/w20/fr.png"> France</a>
+                        <a href="#" onclick="setShipTo('cn', 'China')"><img src="https://flagcdn.com/w20/cn.png"> China</a>
+                        <a href="#" onclick="setShipTo('pk', 'Pakistan')"><img src="https://flagcdn.com/w20/pk.png"> Pakistan</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- ========== BREADCRUMB ========== -->
+<div class="breadcrumb-bar">
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="index.html">Home</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="#">Clothings</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="#">Men's wear</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span id="breadcrumbCat">Mobile accessory</span>
+        </nav>
+    </div>
+</div>
+
+<!-- ========== PRODUCTS MAIN ========== -->
+<div class="products-page">
+    <div class="container">
+        <div class="products-layout">
+
+            <!-- ===== LEFT SIDEBAR ===== -->
+            <aside class="sidebar">
+
+                <!-- CATEGORY FILTER -->
+                <div class="filter-section">
+                    <div class="filter-header" onclick="toggleFilter('categoryFilter')">
+                        <h4>Category</h4>
+                        <i class="fa-solid fa-chevron-up"></i>
+                    </div>
+                    <div class="filter-body" id="categoryFilter">
+                        <ul class="category-list">
+                            <li class="active"><a href="products.html?cat=mobile">Mobile accessory</a></li>
+                            <li><a href="products.html?cat=electronics">Electronics</a></li>
+                            <li><a href="products.html?cat=smartphones">Smartphones</a></li>
+                            <li><a href="products.html?cat=modern">Modern tech</a></li>
+                            <li><a href="#" class="see-all">See all</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- BRANDS FILTER -->
+                <div class="filter-section">
+                    <div class="filter-header" onclick="toggleFilter('brandsFilter')">
+                        <h4>Brands</h4>
+                        <i class="fa-solid fa-chevron-up"></i>
+                    </div>
+                    <div class="filter-body" id="brandsFilter">
+                        <label class="checkbox-item">
+                            <input type="checkbox" onchange="applyFilters()"> Samsung
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" onchange="applyFilters()"> Apple
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" onchange="applyFilters()"> Huawei
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" onchange="applyFilters()"> Pocco
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" onchange="applyFilters()"> Lenovo
+                        </label>
+                        <a href="#" class="see-all">See all</a>
+                    </div>
+                </div>
+
+                <!-- FEATURES FILTER -->
+                <div class="filter-section">
+                    <div class="filter-header" onclick="toggleFilter('featuresFilter')">
+                        <h4>Features</h4>
+                        <i class="fa-solid fa-chevron-up"></i>
+                    </div>
+                    <div class="filter-body" id="featuresFilter">
+                        <label class="checkbox-item">
+                            <input type="checkbox" onchange="applyFilters()"> Metallic
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" onchange="applyFilters()"> Plastic cover
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" onchange="applyFilters()"> 8GB Ram
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" onchange="applyFilters()"> Super power
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" onchange="applyFilters()"> Large Memory
+                        </label>
+                        <a href="#" class="see-all">See all</a>
+                    </div>
+                </div>
+
+                <!-- PRICE RANGE -->
+                <div class="filter-section">
+                    <div class="filter-header" onclick="toggleFilter('priceFilter')">
+                        <h4>Price range</h4>
+                        <i class="fa-solid fa-chevron-up"></i>
+                    </div>
+                    <div class="filter-body" id="priceFilter">
+                        <input type="range" class="price-slider" id="priceSlider"
+                               min="0" max="999999" value="500000"
+                               oninput="updatePriceRange(this.value)">
+                        <div class="price-inputs">
+                            <div>
+                                <label>Min</label>
+                                <input type="number" id="minPrice" value="0" placeholder="0">
+                            </div>
+                            <div>
+                                <label>Max</label>
+                                <input type="number" id="maxPrice" value="999999" placeholder="999999">
+                            </div>
+                        </div>
+                        <button class="btn-apply" onclick="applyFilters()">Apply</button>
+                    </div>
+                </div>
+
+                <!-- CONDITION -->
+                <div class="filter-section">
+                    <div class="filter-header" onclick="toggleFilter('conditionFilter')">
+                        <h4>Condition</h4>
+                        <i class="fa-solid fa-chevron-up"></i>
+                    </div>
+                    <div class="filter-body" id="conditionFilter">
+                        <label class="radio-item">
+                            <input type="radio" name="condition" value="any" checked onchange="applyFilters()"> Any
+                        </label>
+                        <label class="radio-item">
+                            <input type="radio" name="condition" value="refurbished" onchange="applyFilters()"> Refurbished
+                        </label>
+                        <label class="radio-item">
+                            <input type="radio" name="condition" value="new" onchange="applyFilters()"> Brand new
+                        </label>
+                        <label class="radio-item">
+                            <input type="radio" name="condition" value="old" onchange="applyFilters()"> Old items
+                        </label>
+                    </div>
+                </div>
+
+                <!-- RATINGS -->
+                <div class="filter-section">
+                    <div class="filter-header" onclick="toggleFilter('ratingsFilter')">
+                        <h4>Ratings</h4>
+                        <i class="fa-solid fa-chevron-up"></i>
+                    </div>
+                    <div class="filter-body" id="ratingsFilter">
+                        <label class="checkbox-item">
+                            <input type="checkbox" onchange="applyFilters()">
+                            <span class="stars">⭐⭐⭐⭐⭐</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" onchange="applyFilters()">
+                            <span class="stars">⭐⭐⭐⭐</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" onchange="applyFilters()">
+                            <span class="stars">⭐⭐⭐</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- MANUFACTURER -->
+                <div class="filter-section">
+                    <div class="filter-header" onclick="toggleFilter('manufacturerFilter')">
+                        <h4>Manufacturer</h4>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="filter-body hidden" id="manufacturerFilter">
+                        <label class="checkbox-item">
+                            <input type="checkbox" onchange="applyFilters()"> Samsung Co.
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" onchange="applyFilters()"> Apple Inc.
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" onchange="applyFilters()"> Huawei Tech
+                        </label>
+                    </div>
+                </div>
+
+            </aside>
+
+            <!-- ===== RIGHT: PRODUCTS ===== -->
+            <div class="products-main">
+
+                <!-- MOBILE FILTER BAR -->
+                <div class="mobile-filter-bar" style="display:none;">
+                    <button class="mobile-filter-btn"><i class="fa-solid fa-arrow-up-wide-short"></i> Sort: Newest</button>
+                    <button class="mobile-filter-btn" onclick="alert('Filter panel coming soon')"><i class="fa-solid fa-filter"></i> Filter (3)</button>
+                    <div class="view-toggle" style="margin-left:auto;">
+                        <button class="view-btn active" onclick="setView('grid')"><i class="fa-solid fa-grid-2"></i></button>
+                        <button class="view-btn" onclick="setView('list')"><i class="fa-solid fa-list"></i></button>
+                    </div>
+                </div>
+
+                <!-- TOP BAR -->
+                <div class="products-topbar">
+                    <div class="results-info">
+                        <span id="resultsCount">12,911</span> items in
+                        <strong id="currentCat">Mobile accessory</strong>
+                    </div>
+                    <div class="topbar-right">
+                        <label class="verified-check">
+                            <input type="checkbox" id="verifiedOnly" onchange="applyFilters()">
+                            <span>Verified only</span>
+                        </label>
+                        <div class="sort-wrap">
+                            <select id="sortSelect" onchange="applyFilters()">
+                                <option value="featured">Featured</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="rating">Top Rated</option>
+                                <option value="orders">Most Orders</option>
+                            </select>
+                        </div>
+                        <div class="view-toggle">
+                            <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')">
+                                <i class="fa-solid fa-grid-2"></i>
+                            </button>
+                            <button class="view-btn" id="listViewBtn" onclick="setView('list')">
+                                <i class="fa-solid fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACTIVE FILTERS -->
+                <div class="active-filters" id="activeFilters" style="display:none;">
+                    <div class="filter-tags" id="filterTags"></div>
+                    <a href="#" class="clear-filters" onclick="clearAllFilters()">Clear all filter</a>
+                </div>
+
+                
+                       <!-- PRODUCTS GRID VIEW -->
+                     <div class="products-grid" id="productsGrid"></div>
+
+                       <!-- PRODUCTS LIST VIEW -->
+                          <div class="products-list hidden" id="productsList"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== NEWSLETTER ========== -->
+<section class="newsletter-section">
+    <div class="container">
+        <h3>Subscribe on our newsletter</h3>
+        <p>Get daily news on upcoming offers from many suppliers all over the world</p>
+        <div class="newsletter-form">
+            <i class="fa-regular fa-envelope"></i>
+            <input type="email" placeholder="Email">
+            <button>Subscribe</button>
+        </div>
+    </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-wrapper">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="https://placehold.co/32x32/0D6EFD/fff?text=B" alt="Brand">
+                    <span>Brand</span>
+                </a>
+                <p>Best information about the company goes here but now lorem ipsum is</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-col"><h4>About</h4><a href="#">About Us</a><a href="#">Find store</a><a href="#">Categories</a><a href="#">Blogs</a></div>
+            <div class="footer-col"><h4>Partnership</h4><a href="#">About Us</a><a href="#">Find store</a><a href="#">Categories</a><a href="#">Blogs</a></div>
+            <div class="footer-col"><h4>Information</h4><a href="#">Help Center</a><a href="#">Money Refund</a><a href="#">Shipping</a><a href="#">Contact us</a></div>
+            <div class="footer-col"><h4>For users</h4><a href="#">Login</a><a href="#">Register</a><a href="#">Settings</a><a href="#">My Orders</a></div>
+            <div class="footer-col">
+                <h4>Get app</h4>
+                <a href="#" class="app-btn"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store"></a>
+                <a href="#" class="app-btn" style="margin-top:8px;"><img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play"></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Ecommerce.</p>
+            <div class="footer-lang">
+                <img src="https://flagcdn.com/w20/us.png" alt="English">
+                <span>English</span>
+                <i class="fa-solid fa-chevron-up"></i>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
